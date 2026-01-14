@@ -1,8 +1,9 @@
 package com.rhis.backend.auth;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -15,24 +16,30 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<?> register(@RequestBody Map<String, String> request) {
         try {
+            String username = request.get("username");
+            String password = request.get("password");
             String token = authService.register(username, password);
-            return ResponseEntity.ok(token);  // Return JWT token after successful registration
+
+            // Return JSON object with token field
+            return ResponseEntity.ok(Map.of("token", token));
         } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
         try {
+            String username = request.get("username");
+            String password = request.get("password");
             String token = authService.authenticate(username, password);
-            return ResponseEntity.ok(token);
+
+            // Return JSON object with token field
+            return ResponseEntity.ok(Map.of("token", token));
         } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
-
-
 }

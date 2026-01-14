@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -10,6 +10,7 @@ import { WebsocketService } from '../../core/ws/websocket.service';
   standalone: true,
   imports: [ReactiveFormsModule, RouterModule],
   templateUrl: './login-component.html',
+  styleUrls: ['./login-component.scss']
 })
 export class LoginComponent {
 
@@ -18,32 +19,45 @@ export class LoginComponent {
   private wsService = inject(WebsocketService);
   private router = inject(Router);
 
-  errorMessage = '';
-  loading = false;
+  // Signals for reactive state
+  errorMessage = signal('');
+  loading = signal(false);
 
+  // Reactive form
   form = this.fb.nonNullable.group({
     username: ['', Validators.required],
     password: ['', Validators.required],
   });
 
-  submit(): void {
-    if (this.form.invalid || this.loading) return;
+  async submit(): Promise<void> {
+    if (this.form.invalid || this.loading()) return;
 
-    this.errorMessage = '';
-    this.loading = true;
+    this.errorMessage.set('');
+    this.loading.set(true);
 
     const { username, password } = this.form.getRawValue();
 
-    this.authService.login({ username, password }).subscribe({
-      next: (token: string) => {
-        this.authService.save_token(token);
-        this.wsService.connect(token);
-        this.router.navigate(['/lobby']);
-      },
-      error: (err) => {
-        this.errorMessage = err?.error?.message ?? 'Login failed';
-        this.loading = false;
-      }
-    });
+    try {
+      const token = await this.authService.login({ username, password }).toPromise();
+
+if (!token) {
+  throw new Error('Login did not return a token');
+  
+}
+
+this.authService.save_token(token);
+
+
+      // Wait for WebSocket to connect
+      await this.wsService.connect(token);
+      console.log('WebSocket connected, navigating to lobby');
+      this.router.navigate(['/lobby']);
+
+    } catch (err: any) {
+      console.error('Login error:', err);
+      this.errorMessage.set(err?.error?.message ?? 'Login failed');
+    } finally {
+      this.loading.set(false);
+    }
   }
 }

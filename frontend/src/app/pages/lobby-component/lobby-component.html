@@ -1,29 +1,44 @@
-<h2>Lobby</h2>
+<div class="lobby-container">
 
-<section class="users">
-  <h3>Connected players</h3>
+  <h2>Welcome to the Chess Lobby</h2>
+  <p class="intro">
+    Connect with other players, send invitations, and start a game instantly.
+    The chessboard below shows your game when it begins.
+  </p>
 
-  @if (users.length === 0) {
-    <p>No players online</p>
+  <div class="lobby-main">
+
+    <aside class="players-list">
+      <h3>Connected Players</h3>
+
+      @if (users.length === 0) {
+        <p>No players online</p>
+      }
+
+      <ul>
+        @for (user of users; track user) {
+          <li>
+            <span>{{ user }}</span>
+            <button (click)="invite(user)" [disabled]="inviting">
+              Invite
+            </button>
+          </li>
+        }
+      </ul>
+    </aside>
+
+
+    <section class="chessboard-section">
+      <chess-board id="chessboard" style="width: 500px; height: 500px;" position="start"></chess-board>
+    </section>
+  </div>
+
+
+  @if (incomingInvite) {
+    <section class="invite">
+      <p>{{ incomingInvite }} invited you to a game</p>
+      <button class="accept" (click)="respond(true)">Accept</button>
+      <button class="decline" (click)="respond(false)">Decline</button>
+    </section>
   }
-
-  <ul>
-    @for (user of users; track user) {
-      <li>
-        {{ user }}
-        <button (click)="invite(user)" [disabled]="inviting">
-          Invite
-        </button>
-      </li>
-    }
-  </ul>
-</section>
-
-@if (incomingInvite) {
-  <section class="invite">
-    <p>{{ incomingInvite }} invited you to a game</p>
-
-    <button (click)="respond(true)">Accept</button>
-    <button (click)="respond(false)">Decline</button>
-  </section>
-}
+</div>

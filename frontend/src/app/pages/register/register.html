@@ -1,25 +1,31 @@
-<h2>Register</h2>
+<div class="register-container">
+  <form class="register-form" [formGroup]="form" (ngSubmit)="submit()">
+    <h2 class="form-title">Register</h2>
 
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <label>
-    Username
-    <input type="text" formControlName="username" />
-  </label>
+    <label class="form-label">
+      <span>Username</span>
+      <input type="text" formControlName="username" placeholder="Enter your username" />
+    </label>
 
-  <label>
-    Password
-    <input type="password" formControlName="password" />
-  </label>
+    <label class="form-label">
+      <span>Password</span>
+      <input type="password" formControlName="password" placeholder="Enter your password" />
+    </label>
 
-  <button type="submit" [disabled]="form.invalid">
-    Create account
-  </button>
-</form>
+    <button type="submit" class="form-button" [disabled]="form.invalid">
+      @if (loading) {
+        Creating account...
+      } @else {
+        Create account
+      }
+    </button>
 
-@if (errorMessage) {
-  <p class="error">{{ errorMessage }}</p>
-}
+    @if (errorMessage) {
+      <p class="error-message">{{ errorMessage }}</p>
+    }
 
-<a routerLink="/login">
-  Already have an account? Login
-</a>
+    <a routerLink="/login" class="form-link">
+      Already have an account? Login
+    </a>
+  </form>
+</div>

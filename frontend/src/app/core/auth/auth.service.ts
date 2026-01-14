@@ -39,7 +39,7 @@ export class AuthService {
     this.token_storage.clear();
   }
 
-  get_token(): string | null {
+  get_token(): string |null  {
     return this.token_storage.get_token();
   }
 

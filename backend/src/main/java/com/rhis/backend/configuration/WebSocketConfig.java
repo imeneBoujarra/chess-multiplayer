@@ -19,6 +19,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         this.jwtHandshakeInterceptor = jwtHandshakeInterceptor;
         this.jwtHandshakeHandler = jwtHandshakeHandler;
     }
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.enableSimpleBroker("/topic", "/queue");
@@ -26,12 +27,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setApplicationDestinationPrefixes("/app");
     }
 
-
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("*")
                 .addInterceptors(jwtHandshakeInterceptor)
-                .setHandshakeHandler(jwtHandshakeHandler);
+                .setHandshakeHandler(jwtHandshakeHandler)
+                .withSockJS(); // IMPORTANT: Enable SockJS support
     }
 }

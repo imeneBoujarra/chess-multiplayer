@@ -1,8 +1,5 @@
 package com.rhis.backend.game;
 
-
-
-
 import com.rhis.backend.dto.MoveEvent;
 import com.rhis.backend.dto.MoveRequest;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -23,19 +20,27 @@ public class GameController {
         this.messagingTemplate = messagingTemplate;
     }
 
-    @MessageMapping("/game.move")
+    @MessageMapping("/game/move")
     public void move(MoveRequest request, Principal principal) {
-        if (principal == null) return;
+        if (principal == null) {
+            System.err.println("No principal found for move request");
+            return;
+        }
 
-        MoveEvent event = gameService.handleMove(
-                request,
-                principal.getName()
-        );
+        try {
+            MoveEvent event = gameService.handleMove(
+                    request,
+                    principal.getName()
+            );
 
-        messagingTemplate.convertAndSend(
-                "/topic/game." + request.gameId(),
-                event
-        );
+            // Send to both players via topic
+            messagingTemplate.convertAndSend(
+                    "/topic/game/" + request.gameId(),
+                    event
+            );
+        } catch (Exception e) {
+            System.err.println("Error handling move: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
-
