@@ -17,10 +17,10 @@ import java.util.ArrayList;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private final SecurityJwtService securityJwtService;
 
-    public JwtAuthFilter(JwtService jwtService) {
-        this.jwtService = jwtService;
+    public JwtAuthFilter(SecurityJwtService securityJwtService) {
+        this.securityJwtService = securityJwtService;
     }
 
     @Override
@@ -31,12 +31,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            username = jwtService.extractUsername(token);
+            username = securityJwtService.extractUsername(token);
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // validate token
-            if (!jwtService.isTokenExpired(token)) {
+            if (!securityJwtService.isTokenExpired(token)) {
                 SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>()));
             }
         }
