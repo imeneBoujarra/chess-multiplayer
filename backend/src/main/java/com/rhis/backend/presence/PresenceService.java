@@ -30,4 +30,10 @@ public class PresenceService {
     public boolean is_online(String username) {
         return online_usernames.contains(username);
     }
+
+        public Set<String> get_online_usernames() {
+            return online_usernames.stream().sorted().collect(Collectors.toSet());
+        }
+
+
 }

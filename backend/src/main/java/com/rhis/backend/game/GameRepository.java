@@ -1,4 +1,10 @@
 package com.rhis.backend.game;
 
-public interface GameRepository {
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.UUID;
+
+public interface GameRepository extends JpaRepository<Game, UUID> {
 }
+

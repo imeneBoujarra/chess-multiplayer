@@ -1,4 +1,3 @@
 package com.rhis.backend.dto;
 
-public record InviteResponse() {
-}
+public record InviteResponse(String from, boolean accept) {}

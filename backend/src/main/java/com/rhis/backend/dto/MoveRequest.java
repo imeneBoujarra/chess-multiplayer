@@ -1,4 +1,9 @@
 package com.rhis.backend.dto;
 
-public class MoveRequest {
-}
+import java.util.UUID;
+
+public record MoveRequest(
+        UUID gameId,
+        String from,
+        String to
+) {}

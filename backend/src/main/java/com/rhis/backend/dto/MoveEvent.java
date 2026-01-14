@@ -1,4 +1,13 @@
 package com.rhis.backend.dto;
 
-public class MoveEvent {
-}
+
+import java.util.UUID;
+
+public record MoveEvent(
+        UUID gameId,
+        String from,
+        String to,
+        String fen,
+        String playedBy
+) {}
+

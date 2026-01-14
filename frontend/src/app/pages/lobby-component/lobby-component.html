@@ -1,0 +1,29 @@
+<h2>Lobby</h2>
+
+<section class="users">
+  <h3>Connected players</h3>
+
+  @if (users.length === 0) {
+    <p>No players online</p>
+  }
+
+  <ul>
+    @for (user of users; track user) {
+      <li>
+        {{ user }}
+        <button (click)="invite(user)" [disabled]="inviting">
+          Invite
+        </button>
+      </li>
+    }
+  </ul>
+</section>
+
+@if (incomingInvite) {
+  <section class="invite">
+    <p>{{ incomingInvite }} invited you to a game</p>
+
+    <button (click)="respond(true)">Accept</button>
+    <button (click)="respond(false)">Decline</button>
+  </section>
+}

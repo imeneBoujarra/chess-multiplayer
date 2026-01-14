@@ -1,0 +1,25 @@
+<h2>Register</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <label>
+    Username
+    <input type="text" formControlName="username" />
+  </label>
+
+  <label>
+    Password
+    <input type="password" formControlName="password" />
+  </label>
+
+  <button type="submit" [disabled]="form.invalid">
+    Create account
+  </button>
+</form>
+
+@if (errorMessage) {
+  <p class="error">{{ errorMessage }}</p>
+}
+
+<a routerLink="/login">
+  Already have an account? Login
+</a>

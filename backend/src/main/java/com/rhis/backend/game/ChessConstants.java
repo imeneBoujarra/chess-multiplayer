@@ -1,4 +1,9 @@
 package com.rhis.backend.game;
 
-public class ChessConstants {
+public final class ChessConstants {
+
+    private ChessConstants() {}
+
+    public static final String INITIAL_FEN =
+            "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 }
