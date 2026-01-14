@@ -10,6 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @Component
 public class JwtHandshakeInterceptor implements HandshakeInterceptor {
@@ -21,24 +22,25 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
     }
 
     @Override
-    public boolean beforeHandshake(
-            @NonNull ServerHttpRequest request,
-            @NonNull ServerHttpResponse response,
-            @NonNull WebSocketHandler wsHandler,
-            @NonNull Map<String, Object> attributes
-    ) {
-        Map<String, List<String>> params = UriComponentsBuilder.fromUri(request.getURI()).build().getQueryParams();
-        List<String> token_list = params.get("token");
+    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
+                                   WebSocketHandler wsHandler, Map<String, Object> attributes) {
+        try {
+            var params = UriComponentsBuilder.fromUri(request.getURI()).build().getQueryParams();
+            var tokens = params.get("token");
 
-        if (token_list == null || token_list.isEmpty()) {
-            return false;
+            if (tokens == null || tokens.isEmpty()) {
+                return false;
+            }
+
+            String token = tokens.get(0);
+            String username = jwt_service.extractUsername(token);
+
+            attributes.put("username", username);
+            return true;
+        } catch (Exception ex) {
+
+             return false;
         }
-
-        String token = token_list.get(0);
-        String username = jwt_service.extractUsername(token);
-
-        attributes.put("username", username);
-        return true;
     }
 
     @Override

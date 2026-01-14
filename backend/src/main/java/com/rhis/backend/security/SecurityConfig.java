@@ -27,7 +27,8 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/auth/**").permitAll() // Allow access to auth routes
+                                .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/ws/**", "/ws").permitAll()// Allow access to auth routes
                                 .anyRequest().authenticated()               // Secure other routes
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)  // Add JWT filter before default authentication filter

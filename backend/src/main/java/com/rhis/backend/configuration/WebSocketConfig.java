@@ -11,9 +11,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private JwtHandshakeInterceptor jwtHandshakeInterceptor ;
-    private JwtHandshakeHandler jwtHandshakeHandler ;
+    private final JwtHandshakeInterceptor jwtHandshakeInterceptor;
+    private final JwtHandshakeHandler jwtHandshakeHandler;
 
+    public WebSocketConfig(JwtHandshakeInterceptor jwtHandshakeInterceptor,
+                           JwtHandshakeHandler jwtHandshakeHandler) {
+        this.jwtHandshakeInterceptor = jwtHandshakeInterceptor;
+        this.jwtHandshakeHandler = jwtHandshakeHandler;
+    }
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.enableSimpleBroker("/topic");
