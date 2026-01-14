@@ -27,7 +27,7 @@ public class AuthController {
     public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
         try {
             String token = authService.authenticate(username, password);
-            return ResponseEntity.ok(token);  // Return JWT token after successful login
+            return ResponseEntity.ok(token);
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

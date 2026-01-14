@@ -9,8 +9,8 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private final String SECRET_KEY = "secret_key";  // Use a secure key in production
-    private final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;  // 1 day in milliseconds
+    private final String SECRET_KEY = "okzBhYqjKpxZmn6vyiPAxpk9O8cPyhchm700K6DN2yET3tA0P6rLidRwdOfXQHgV";
+    private final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
 
     // Generate JWT token
     public String generateToken(String username) {
